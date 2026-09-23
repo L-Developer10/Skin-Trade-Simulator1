@@ -1,0 +1,106 @@
+{
+  "f9d2134d-591e-480b-bf9f-b1b33c07fa4d": {
+    "id": "f9d2134d-591e-480b-bf9f-b1b33c07fa4d",
+    "_id": "f9d2134d-591e-480b-bf9f-b1b33c07fa4d",
+    "githubId": 99996128,
+    "username": "Jogador_Teste",
+    "nome": "Jogador Teste",
+    "avatar": "https://avatars.githubusercontent.com/Jogador_Teste",
+    "dinheiro": 140.0,
+    "inventario": [],
+    "criadoEm": "2026-09-23T20:20:58.521447+00:00",
+    "atualizadoEm": "2026-09-23T20:20:58.528421+00:00"
+  },
+  "ed9afc87-b2f9-4652-b5b4-d2cc3eaf8490": {
+    "id": "ed9afc87-b2f9-4652-b5b4-d2cc3eaf8490",
+    "_id": "ed9afc87-b2f9-4652-b5b4-d2cc3eaf8490",
+    "githubId": 99992451,
+    "username": "Player_Test",
+    "nome": "Player Test",
+    "avatar": "https://avatars.githubusercontent.com/Player_Test",
+    "dinheiro": 50.0,
+    "inventario": [
+      {
+        "uid": "1790194883861_0_5800",
+        "boxId": "comum",
+        "boxName": "Caixa Comum",
+        "skinId": "c4",
+        "weapon": "Galil AR",
+        "skin": "Conexão Urbana",
+        "rarity": "common",
+        "type": "rifle",
+        "color": "#95a5b5",
+        "basePrice": 40.0,
+        "conditionKey": "danificada",
+        "conditionLabel": "Danificada",
+        "conditionMult": 0.6,
+        "conditionColor": "#ff7043",
+        "price": 24.0,
+        "adquiridoEm": "2026-09-23T20:21:23.861439+00:00"
+      }
+    ],
+    "criadoEm": "2026-09-23T20:21:23.849706+00:00",
+    "atualizadoEm": "2026-09-23T20:21:36.458580+00:00"
+  },
+  "7cec953f-a6eb-4529-8525-3ad57b1ecd13": {
+    "id": "7cec953f-a6eb-4529-8525-3ad57b1ecd13",
+    "_id": "7cec953f-a6eb-4529-8525-3ad57b1ecd13",
+    "githubId": 99996872,
+    "username": "Player_Seller",
+    "nome": "Player Seller",
+    "avatar": "https://avatars.githubusercontent.com/Player_Seller",
+    "dinheiro": 144.38,
+    "inventario": [],
+    "criadoEm": "2026-09-23T20:21:46.897301+00:00",
+    "atualizadoEm": "2026-09-23T20:21:46.925325+00:00"
+  },
+  "1f6e5a56-3c3b-42ec-af7c-bc98b6b97e81": {
+    "id": "1f6e5a56-3c3b-42ec-af7c-bc98b6b97e81",
+    "_id": "1f6e5a56-3c3b-42ec-af7c-bc98b6b97e81",
+    "githubId": 99999187,
+    "username": "Jogador_CSGO",
+    "nome": "Jogador Csgo",
+    "avatar": "https://avatars.githubusercontent.com/Jogador_CSGO",
+    "dinheiro": 15.0,
+    "inventario": [
+      {
+        "uid": "1790195137066_0_8586",
+        "boxId": "comum",
+        "boxName": "Caixa Comum",
+        "skinId": "c6",
+        "weapon": "UMP-45",
+        "skin": "Carbono",
+        "rarity": "common",
+        "type": "smg",
+        "color": "#687787",
+        "basePrice": 70.0,
+        "conditionKey": "danificada",
+        "conditionLabel": "Danificada",
+        "conditionMult": 0.6,
+        "conditionColor": "#ff7043",
+        "price": 42.0,
+        "adquiridoEm": "2026-09-23T20:25:37.066911+00:00"
+      },
+      {
+        "uid": "1790195190178_0_5676",
+        "boxId": "comum",
+        "boxName": "Caixa Comum",
+        "skinId": "c6",
+        "weapon": "UMP-45",
+        "skin": "Carbono",
+        "rarity": "common",
+        "type": "smg",
+        "color": "#687787",
+        "basePrice": 70.0,
+        "conditionKey": "arranhada",
+        "conditionLabel": "Arranhada",
+        "conditionMult": 0.75,
+        "conditionColor": "#ffa726",
+        "price": 52.5,
+        "adquiridoEm": "2026-09-23T20:26:30.178479+00:00"
+      }
+    ],
+    "criadoEm": "2026-09-23T20:23:33.701639+00:00",
+    "atualizadoEm": "2026-09-23T20:26:37.249126+00:00"
+  }
+}

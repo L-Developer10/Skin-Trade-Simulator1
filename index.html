@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skin Trader Simulator - Full-Stack CS:GO</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header do Jogo -->
+  <header class="game-header">
+    <div class="header-left">
+      <div class="logo">
+        <span class="logo-icon">🎯</span>
+        <div class="logo-text">
+          <h1>SKIN TRADER</h1>
+          <span class="logo-sub">SIMULATOR CS:GO</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Saldo Central -->
+    <div class="header-center">
+      <div class="balance-card">
+        <span class="balance-label">SEU SALDO (MONGODB)</span>
+        <div class="balance-amount" id="balance-display">R$ 0,00</div>
+      </div>
+    </div>
+
+    <!-- Painel de Usuário & Autenticação à Direita -->
+    <div class="header-right">
+      <!-- Seção Usuário Logado -->
+      <div class="user-profile-chip" id="user-profile-chip" style="display: none;">
+        <img src="https://avatars.githubusercontent.com/u/0" alt="Avatar" class="user-avatar" id="user-avatar">
+        <div class="user-details">
+          <span class="user-name" id="user-name">Jogador</span>
+          <span class="user-status-badge">Conectado</span>
+        </div>
+        <button class="btn-logout" id="btn-logout" title="Encerrar sessão">SAIR</button>
+      </div>
+
+      <!-- Seção Usuário Deslogado -->
+      <div class="guest-auth-actions" id="guest-auth-actions">
+        <a href="http://127.0.0.1:5000/auth/github" class="btn-github-login" id="btn-header-github">
+          <svg class="github-svg-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          ENTRAR COM GITHUB
+        </a>
+      </div>
+
+      <button class="sound-toggle-btn" id="sound-toggle" title="Ativar/Desativar Sons">
+        🔊 <span id="sound-status">Som Ligado</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Navegação por Abas -->
+  <nav class="nav-tabs">
+    <button class="tab-btn active" data-tab="tab-case">
+      <span class="tab-icon">📦</span>
+      <span class="tab-title">Caixas</span>
+      <span class="badge-cost">1x a 5x</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-clicker">
+      <span class="tab-icon">🎯</span>
+      <span class="tab-title">Farm de Dinheiro</span>
+      <span class="tab-tag">Mini-game</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-slots">
+      <span class="tab-icon">🎰</span>
+      <span class="tab-title">Roleta de Apostas</span>
+      <span class="tab-tag hot">Até 220x</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-inventory">
+      <span class="tab-icon">🎒</span>
+      <span class="tab-title">Meu Inventário</span>
+      <span class="tab-badge" id="inv-count-badge">0</span>
+    </button>
+  </nav>
+
+  <!-- Conteúdo Principal -->
+  <main class="main-container">
+
+    <!-- ABA 1: MULTI-CAIXAS & ROLETA DE SKINS -->
+    <section class="tab-content active" id="tab-case">
+      <div class="case-opening-wrapper">
+        <div class="case-header-info">
+          <h2>ESCOLHA UMA CAIXA PARA ABRIR</h2>
+          <p>Progresso e skins sincronizados permanentemente no seu banco de dados <strong>MongoDB</strong>!</p>
+        </div>
+
+        <!-- Seletor de Quantidade de Abertura (1x a 5x) -->
+        <div class="multi-qty-selector-bar">
+          <div class="qty-label">
+            <span class="qty-icon">⚡</span>
+            <span>ABERTURA SIMULTÂNEA:</span>
+          </div>
+          <div class="qty-buttons">
+            <button class="qty-btn active" data-qty="1">1x</button>
+            <button class="qty-btn" data-qty="2">2x</button>
+            <button class="qty-btn" data-qty="3">3x</button>
+            <button class="qty-btn" data-qty="4">4x</button>
+            <button class="qty-btn" data-qty="5">5x COMBO</button>
+          </div>
+        </div>
+
+        <!-- Grade das 3 Caixas Lado a Lado -->
+        <div class="boxes-selection-grid">
+          
+          <!-- 1. CAIXA COMUM (R$ 100) -->
+          <div class="box-card common-box" id="box-card-comum">
+            <div class="box-badge-tier">ENTRADA</div>
+            <div class="box-icon-wrap">
+              <span class="box-emoji">📦</span>
+              <div class="box-glow"></div>
+            </div>
+            <h3 class="box-name">Caixa Comum</h3>
+            <div class="box-price-tag" id="price-comum">R$ 100,00</div>
+            <p class="box-desc">Ideal para iniciantes. Contém skins Comuns e Incomuns.</p>
+            
+            <div class="box-odds-summary">
+              <div class="odds-pill common-pill">
+                <span>Comum</span>
+                <strong>75%</strong>
+              </div>
+              <div class="odds-pill uncommon-pill">
+                <span>Incomum</span>
+                <strong>25%</strong>
+              </div>
+            </div>
+
+            <button class="btn-open-box-card" id="btn-comum" onclick="abrirCaixa('comum')">
+              ABRIR 1x (R$ 100,00)
+            </button>
+          </div>
+
+          <!-- 2. CAIXA RARA (R$ 1.000) -->
+          <div class="box-card rare-box" id="box-card-rara">
+            <div class="box-badge-tier hot">AVANÇADA</div>
+            <div class="box-icon-wrap">
+              <span class="box-emoji">💠</span>
+              <div class="box-glow"></div>
+            </div>
+            <h3 class="box-name">Caixa Rara</h3>
+            <div class="box-price-tag" id="price-rara">R$ 1.000,00</div>
+            <p class="box-desc">Para colecionadores. Pode conter skins até o nível Épico!</p>
+            
+            <div class="box-odds-summary grid-4">
+              <div class="odds-pill common-pill">
+                <span>Comum</span>
+                <strong>45%</strong>
+              </div>
+              <div class="odds-pill uncommon-pill">
+                <span>Incomum</span>
+                <strong>30%</strong>
+              </div>
+              <div class="odds-pill rare-pill">
+                <span>Raro</span>
+                <strong>18%</strong>
+              </div>
+              <div class="odds-pill epic-pill">
+                <span>Épico</span>
+                <strong>7%</strong>
+              </div>
+            </div>
+
+            <button class="btn-open-box-card" id="btn-rara" onclick="abrirCaixa('rara')">
+              ABRIR 1x (R$ 1.000,00)
+            </button>
+          </div>
+
+          <!-- 3. CAIXA LENDÁRIA (R$ 10.000) -->
+          <div class="box-card legendary-box" id="box-card-lendaria">
+            <div class="box-badge-tier gold">ELITE MÁXIMA</div>
+            <div class="box-icon-wrap">
+              <span class="box-emoji">👑</span>
+              <div class="box-glow"></div>
+            </div>
+            <h3 class="box-name">Caixa Lendária</h3>
+            <div class="box-price-tag gold-text" id="price-lendaria">R$ 10.000,00</div>
+            <p class="box-desc">A mais cobiçada. Tente a sorte para tirar a Karambit Esmeralda Estelar!</p>
+            
+            <div class="box-odds-summary grid-5">
+              <div class="odds-pill common-pill">
+                <span>Comum</span>
+                <strong>30%</strong>
+              </div>
+              <div class="odds-pill uncommon-pill">
+                <span>Incomum</span>
+                <strong>27%</strong>
+              </div>
+              <div class="odds-pill rare-pill">
+                <span>Raro</span>
+                <strong>28%</strong>
+              </div>
+              <div class="odds-pill epic-pill">
+                <span>Épico</span>
+                <strong>14%</strong>
+              </div>
+              <div class="odds-pill legendary-pill">
+                <span>Lendário</span>
+                <strong>1%</strong>
+              </div>
+            </div>
+
+            <button class="btn-open-box-card gold-btn" id="btn-lendaria" onclick="abrirCaixa('lendaria')">
+              ABRIR 1x (R$ 10.000,00)
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Palco da Roleta de Skins -->
+        <div class="roulette-stage-section" id="roulette-stage">
+          <div class="roulette-status-header">
+            <span class="stage-tag" id="stage-box-tag">CAIXA COMUM SELECIONADA</span>
+            <span class="stage-sub" id="stage-box-sub">Role a esteira para sortear sua skin</span>
+          </div>
+
+          <!-- Container das Esteiras de Roleta (Multi-Track) -->
+          <div class="multi-roulette-container" id="multi-roulette-container">
+            <div class="roulette-viewport single-viewport">
+              <div class="roulette-marker top"></div>
+              <div class="roulette-marker bottom"></div>
+              <div class="roulette-track" id="roulette-track-0"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Painel Informativo da Roleta Invisível de Condições -->
+        <div class="wear-info-panel">
+          <div class="wear-header">
+            <span class="wear-icon">🔍</span>
+            <div>
+              <h4>SISTEMA DE ESTADO DA ARMA (ROLETA INVISÍVEL NO SERVIDOR)</h4>
+              <p>Ao abrir uma caixa, o servidor sorteia o desgaste da arma em segundo plano, aplicando um multiplicador direto no seu valor de mercado:</p>
+            </div>
+          </div>
+
+          <div class="wear-badges-row">
+            <div class="wear-badge-card" style="border-color: #ef5350;">
+              <span class="wear-title" style="color: #ef5350;">Arruinada</span>
+              <span class="wear-chance">15% chance</span>
+              <span class="wear-mult danger-text">0.40x valor</span>
+            </div>
+            <div class="wear-badge-card" style="border-color: #ff7043;">
+              <span class="wear-title" style="color: #ff7043;">Danificada</span>
+              <span class="wear-chance">25% chance</span>
+              <span class="wear-mult danger-text">0.60x valor</span>
+            </div>
+            <div class="wear-badge-card" style="border-color: #ffa726;">
+              <span class="wear-title" style="color: #ffa726;">Arranhada</span>
+              <span class="wear-chance">25% chance</span>
+              <span class="wear-mult" style="color: #ffa726;">0.75x valor</span>
+            </div>
+            <div class="wear-badge-card" style="border-color: #90caf9;">
+              <span class="wear-title" style="color: #90caf9;">Normal</span>
+              <span class="wear-chance">20% chance</span>
+              <span class="wear-mult" style="color: #90caf9;">1.00x valor</span>
+            </div>
+            <div class="wear-badge-card" style="border-color: #66bb6a;">
+              <span class="wear-title" style="color: #66bb6a;">Bom Estado</span>
+              <span class="wear-chance">12% chance</span>
+              <span class="wear-mult green-text">1.25x valor</span>
+            </div>
+            <div class="wear-badge-card" style="border-color: #ffd700;">
+              <span class="wear-title" style="color: #ffd700;">Perfeito Estado</span>
+              <span class="wear-chance">3% chance</span>
+              <span class="wear-mult gold-text">1.50x valor</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ABA 2: MINI-GAME CLIQUE NO CÍRCULO (FARM DE CASH) -->
+    <section class="tab-content" id="tab-clicker">
+      <div class="clicker-section">
+        <div class="section-title">
+          <h2>🎯 TREINO DE MIRA & REFLEXO</h2>
+          <p>Acerte o alvo vermelho antes do tempo acabar para faturar dinheiro validado pelo servidor!</p>
+        </div>
+
+        <!-- Seletor de Dificuldade -->
+        <div class="difficulty-selector">
+          <button class="diff-btn active" data-diff="easy">
+            <div class="diff-badge green">Fácil</div>
+            <div class="diff-time">⏱️ 5.0 segundos</div>
+            <div class="diff-reward">Recompensa: <strong>+R$ 10,00</strong></div>
+          </button>
+          <button class="diff-btn" data-diff="medium">
+            <div class="diff-badge yellow">Médio</div>
+            <div class="diff-time">⏱️ 1.3 segundo</div>
+            <div class="diff-reward">Recompensa: <strong>+R$ 45,00</strong></div>
+          </button>
+          <button class="diff-btn" data-diff="hard">
+            <div class="diff-badge red">Difícil</div>
+            <div class="diff-time">⏱️ 0.7 segundo</div>
+            <div class="diff-reward">Recompensa: <strong>+R$ 100,00</strong></div>
+          </button>
+        </div>
+
+        <!-- Arena do Jogo -->
+        <div class="target-arena" id="target-arena">
+          <div class="arena-overlay" id="arena-overlay">
+            <p>Clique em <strong>INICIAR MINI-GAME</strong> para começar a farmar!</p>
+            <button class="btn-primary" id="btn-start-clicker">INICIAR MINI-GAME</button>
+          </div>
+
+          <div class="arena-timer-bar">
+            <div class="arena-timer-fill" id="arena-timer-fill"></div>
+          </div>
+
+          <div class="red-target" id="red-target">
+            <div class="target-ring outer"></div>
+            <div class="target-ring middle"></div>
+            <div class="target-center"></div>
+          </div>
+
+          <div class="floating-container" id="floating-container"></div>
+        </div>
+
+        <div class="clicker-stats-bar">
+          <div class="stat-pill">Acertos: <strong id="stat-hits">0</strong></div>
+          <div class="stat-pill">Tempo Restante: <strong id="stat-time">0.0s</strong></div>
+          <div class="stat-pill">Total Ganho: <strong class="green-text" id="stat-earned">R$ 0,00</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA 3: ROLETA DE APOSTAS (SLOT MACHINE) -->
+    <section class="tab-content" id="tab-slots">
+      <div class="slots-section">
+        <div class="section-title">
+          <h2>🎰 ROLETA DE MULTIPLICADORES</h2>
+          <p>Aposte parte do seu saldo para multiplicar até <strong>220x</strong>! Cuidado com o ❌!</p>
+        </div>
+
+        <div class="slot-machine-box">
+          <div class="reels-container">
+            <div class="reel-window" id="reel-1">
+              <div class="reel-symbol" id="symbol-1">❓</div>
+            </div>
+            <div class="reel-window" id="reel-2">
+              <div class="reel-symbol" id="symbol-2">❓</div>
+            </div>
+            <div class="reel-window" id="reel-3">
+              <div class="reel-symbol" id="symbol-3">❓</div>
+            </div>
+          </div>
+
+          <div class="slot-result-banner" id="slot-result-banner">
+            Escolha sua aposta e clique em GIRAR!
+          </div>
+
+          <div class="bet-controls">
+            <div class="bet-percent-buttons">
+              <button class="btn-pct" data-pct="15">15%</button>
+              <button class="btn-pct" data-pct="25">25%</button>
+              <button class="btn-pct" data-pct="50">50%</button>
+              <button class="btn-pct all-in" data-pct="100">100% ALL-IN</button>
+            </div>
+
+            <div class="bet-input-row">
+              <label for="bet-amount-input">Valor da Aposta:</label>
+              <div class="input-money-wrapper">
+                <span>R$</span>
+                <input type="number" id="bet-amount-input" min="1" step="1" value="20">
+              </div>
+              <button class="btn-spin-slots" id="btn-spin-slots">
+                GIRAR ROLETA 🎲
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="slot-payout-table">
+          <h3>TABELA DE SÍMBOLOS & MULTIPLICADORES</h3>
+          <div class="payout-grid">
+            <div class="payout-card bad">
+              <div class="payout-symbol">❌</div>
+              <div class="payout-info">
+                <strong>X Vermelho (Mais comum)</strong>
+                <p>• <span class="danger-text">Se cair qualquer ❌ (1 ou mais), anula todo o ganho (0x)!</span></p>
+              </div>
+            </div>
+
+            <div class="payout-card">
+              <div class="payout-symbol">🟢</div>
+              <div class="payout-info">
+                <strong>Círculo Verde (1 em 72)</strong>
+                <p>Se cair 2 ou mais: <strong class="green-text">Multiplica 7x</strong></p>
+              </div>
+            </div>
+
+            <div class="payout-card">
+              <div class="payout-symbol">🟩</div>
+              <div class="payout-info">
+                <strong>Quadrado Verde</strong>
+                <p>Se cair 2 ou mais: <strong class="green-text">Multiplica 13x</strong></p>
+              </div>
+            </div>
+
+            <div class="payout-card">
+              <div class="payout-symbol">❇️</div>
+              <div class="payout-info">
+                <strong>Brilho Verde (1 em 364)</strong>
+                <p>Se cair 2 ou mais: <strong class="green-text">Multiplica 26x</strong></p>
+              </div>
+            </div>
+
+            <div class="payout-card">
+              <div class="payout-symbol">💚</div>
+              <div class="payout-info">
+                <strong>Coração Verde (1 em 1.953)</strong>
+                <p>Se caírem os 3 iguais: <strong class="green-text">Multiplica 65x</strong></p>
+              </div>
+            </div>
+
+            <div class="payout-card jackpot-card">
+              <div class="payout-symbol">7️⃣</div>
+              <div class="payout-info">
+                <strong class="gold-text">777 JACKPOT (1 em 4.630)</strong>
+                <p>Se caírem os 3 iguais: <strong class="gold-text">Multiplica 220x!</strong></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA 4: INVENTÁRIO & MERCADO -->
+    <section class="tab-content" id="tab-inventory">
+      <div class="inventory-section">
+        <div class="inventory-header">
+          <div>
+            <h2>MEU INVENTÁRIO & MERCADO</h2>
+            <p>Skins salvas no MongoDB. Venda para bots (45%) ou para players pelo valor integral (100%).</p>
+          </div>
+          <div class="inv-summary-stats">
+            <span>Total de Skins: <strong id="inv-total-skins">0</strong></span>
+            <span>Valor Estimado: <strong class="green-text" id="inv-total-value">R$ 0,00</strong></span>
+          </div>
+        </div>
+
+        <div class="inv-filters">
+          <button class="filter-btn active" data-filter="all">Todas</button>
+          <button class="filter-btn" data-filter="common">Comum</button>
+          <button class="filter-btn" data-filter="uncommon">Incomum</button>
+          <button class="filter-btn" data-filter="rare">Raro</button>
+          <button class="filter-btn" data-filter="epic">Épico</button>
+          <button class="filter-btn" data-filter="legendary">Lendária</button>
+        </div>
+
+        <div class="inventory-grid" id="inventory-grid"></div>
+
+        <div class="empty-inventory" id="empty-inventory">
+          <span class="empty-icon">🎒</span>
+          <h3>Seu inventário está vazio!</h3>
+          <p>Abra caixas na aba "Caixas" para conseguir suas primeiras skins salvas no banco.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL DE PREMIAÇÃO INDIVIDUAL (1 ITEM) -->
+  <div class="modal-backdrop" id="unbox-modal">
+    <div class="modal-content" id="modal-card">
+      <div class="modal-glow" id="modal-glow"></div>
+      
+      <div class="modal-badges-row">
+        <span class="modal-badge" id="modal-rarity">LENDÁRIA</span>
+        <span class="modal-wear-badge" id="modal-wear">PERFEITO ESTADO</span>
+      </div>
+      
+      <div class="modal-skin-image-wrap">
+        <div class="skin-svg-display" id="modal-svg"></div>
+      </div>
+
+      <h2 class="modal-skin-name" id="modal-skin-name">Karambit | Esmeralda Estelar</h2>
+      
+      <div class="modal-price-breakdown">
+        <div class="modal-skin-price" id="modal-skin-price">R$ 18.750,00</div>
+        <div class="modal-skin-subprice" id="modal-skin-subprice">Base: R$ 12.500,00 (Multiplicador 1.50x)</div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-keep" id="modal-btn-keep">Guardar no Inventário</button>
+        <button class="btn-bot-sell" id="modal-btn-bot">
+          Vender ao Bot por <strong id="modal-bot-price">R$ 8.437,50</strong> (45%)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE MULTI-PREMIAÇÃO (2 A 5 ITENS) -->
+  <div class="modal-backdrop" id="multi-unbox-modal">
+    <div class="modal-content multi-content" id="multi-modal-card">
+      <h2 class="multi-modal-title" id="multi-modal-title">🎉 VOCÊ ABRIU 5 CAIXAS!</h2>
+      <div class="multi-modal-summary" id="multi-modal-summary">
+        Total Gasto: <span id="multi-cost">R$ 500,00</span> | Valor Ganho: <strong class="green-text" id="multi-value">R$ 1.240,00</strong>
+      </div>
+
+      <div class="multi-items-grid" id="multi-items-grid"></div>
+
+      <div class="multi-modal-actions">
+        <button class="btn-keep" id="btn-multi-keep-all">Guardar Todas no Inventário</button>
+        <button class="btn-bot-sell" id="btn-multi-bot-all">
+          Vender Todas ao Bot por <strong id="multi-bot-total">R$ 558,00</strong> (45%)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL / PORTAL DE AUTENTICAÇÃO GITHUB -->
+  <div class="modal-backdrop" id="auth-modal">
+    <div class="modal-content auth-modal-box">
+      <div class="auth-icon-wrap">
+        <span class="auth-big-icon">🐙</span>
+      </div>
+      <h2>ENTRE PARA JOGAR</h2>
+      <p>Conecte sua conta do GitHub para salvar permanentemente suas skins, saldo e conquistas no MongoDB!</p>
+
+      <div class="auth-actions-group">
+        <a href="http://127.0.0.1:5000/auth/github" class="btn-hero-github" id="btn-modal-github">
+          <svg class="github-svg-icon" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          ENTRAR COM GITHUB
+        </a>
+
+        <!-- Opção de teste em desenvolvimento local -->
+        <div class="dev-login-section">
+          <span class="dev-divider">ou teste localmente</span>
+          <div class="dev-login-row">
+            <input type="text" id="dev-user-input" placeholder="Seu nome de jogador" value="Jogador_CSGO">
+            <button class="btn-dev-login" id="btn-dev-login">ENTRAR (TESTE)</button>
+          </div>
+          <small class="dev-tip">O modo de teste salva seu saldo e skins no banco MongoDB da mesma forma.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFICAÇÕES TOAST -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="game.js"></script>
+</body>
+</html>
